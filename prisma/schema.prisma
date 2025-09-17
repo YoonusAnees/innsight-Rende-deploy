@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  firstName String?   
+  lastName  String?
+  email     String   @unique
+  password  String
+  role      String   @default("user") // "admin", "hotelOwner", or "user"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  hotels    Hotel[]  // Hotels created by this user (if hotelOwner)
+  bookings  Booking[] // Bookings made by this user
+}
+
+model Hotel {
+  id          String   @id @default(uuid())
+  title       String
+  location    String
+  price       Float
+  rating      Float
+  imageUrl    String
+  description String?  // Added description field
+  bestSeller  Boolean  @default(false)
+  createdBy   String
+  creator     User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  bookings    Booking[] // Bookings for this hotel
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hotelId   String
+  hotel     Hotel    @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  checkIn   DateTime
+  checkOut  DateTime
+  guests    Int
+  totalPrice Float
+  status    String   @default("confirmed") // "confirmed", "cancelled", "completed"
+  createdAt DateTime @default(now())
+updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([userId, hotelId, checkIn])
+}
