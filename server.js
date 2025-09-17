@@ -4,7 +4,7 @@ import cors from "cors";
 import { PrismaClient } from "./generated/prisma/index.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import hotelRoutes from "./routes/hotelRoutes.js"; // Make sure this path is correct
+import hotelRoutes from "./routes/hotelRoutes.js"; 
 import bookingRoutes from "./routes/bookingRoutes.js";
 
 import mailRoutes from "./routes/mail.js"; 
@@ -15,12 +15,15 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://innsight-vite-deploy.vercel.app",
+  credentials: true
+}));
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/hotels", hotelRoutes); // This should work for /api/hotels and /api/hotels/my-hotels
+app.use("/api/hotels", hotelRoutes); 
 app.use("/api/bookings", bookingRoutes);
 app.use('/api/',mailRoutes);
 
