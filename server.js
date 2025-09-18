@@ -18,7 +18,8 @@ const prisma = new PrismaClient();
 // Allow local development and deployed site
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://innsight-vite-deploy.vercel.app"
+  "https://innsight-vite-deploy.vercel.app",
+  "https://innsight-vite-deploy-yoonus-projects-26429515.vercel.app"
 ];
 
 app.use(cors({
